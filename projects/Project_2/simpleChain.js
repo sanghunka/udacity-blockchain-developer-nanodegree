@@ -10,16 +10,18 @@ const level = require('level');
 const chainDB = './chaindata';
 const db = level(chainDB);
 
-
-
 /* ===== Blockchain Class ==========================
 |  Class with a constructor for new blockchain 		|
 |  ================================================*/
 
 class Blockchain{
   constructor(){
-    const genesisBlock = new Block("First block in the chain - Genesis block");
-    this.addBlock(genesisBlock);
+    this.getBlockHeight().then((height) => {
+      if (height < 0) {
+        const genesisBlock = new Block("First block in the chain - Genesis block");
+        this.addBlock(genesisBlock);
+      }  
+    })
   }
 
   // Add new block
