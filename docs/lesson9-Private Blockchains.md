@@ -373,4 +373,4 @@ function addDataToLevelDB(value) {
 
 # 12. Practice LevelDB and Promises
 # 13. Lesson Recap
-# 14. Projectx Prep
+# 14. Project Prep
