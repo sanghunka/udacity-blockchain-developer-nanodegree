@@ -12,4 +12,5 @@ class Block{
     }
 }
 
-module.exports = Block;
+module.exports = Block; // original. 바로 Block을 할당한것.
+//module.exports.Block = Block; // from example. exports도 object이다. exports의 Block에다가 Block을 할당한것.

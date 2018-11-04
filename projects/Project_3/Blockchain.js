@@ -3,7 +3,7 @@
 |  =========================================================*/
 
 const SHA256 = require('crypto-js/sha256');
-const Block = require('./block.js');
+const Block = require('./Block.js');
 
 //Requirement 1	Configure LevelDB to persist dataset
 const level = require('level');
@@ -39,6 +39,7 @@ class Blockchain{
     newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
     // Adding block object to chain
     this.addLevelDBData(newBlock.height, JSON.stringify(newBlock));
+    // console.log("addBlockHeight: "+newBlock.height ); //would be removed
   }
 
   // Get block height
@@ -59,13 +60,12 @@ class Blockchain{
   // get block
   getBlock(blockHeight){
     return new Promise((resolve, reject) => {
-      db.get(blockHeight, function(err, value) {
-          if (err) return console.log('Not found!', err);
-          resolve(JSON.parse(value));
+      db.get(blockHeight, function(error, value) {
+          if (error) { reject(error); } 
+            else { resolve(JSON.parse(value)); }
       });
     })    
   }
-
 
   // validate block
   async validateBlock(blockHeight){
@@ -139,21 +139,22 @@ class Blockchain{
 
 }//class Blockchain
 
+module.exports = Blockchain;
 
 //test code
-let bc = new Blockchain();
+// let bc = new Blockchain();
 
-(function theLoop (i) {
-  setTimeout(function () {
-      console.log(i);
-      let blockTest = new Block("Test Block - " + (i+1));
-      bc.addBlock(blockTest).then(() => {
-          bc.getBlock(i).then(block => console.log(block))
-          i++;
-          if (i < 10) theLoop(i);
-      });
-  }, 10);
-})(0);
+// (function theLoop (i) {
+//   setTimeout(function () {
+//       console.log(i);
+//       let blockTest = new Block("Test Block - " + (i+1));
+//       bc.addBlock(blockTest).then(() => {
+//           bc.getBlock(i).then(block => console.log(block))
+//           i++;
+//           if (i < 10) theLoop(i);
+//       });
+//   }, 10);
+// })(0);
 
 
 
