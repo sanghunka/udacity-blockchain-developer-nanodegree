@@ -57,25 +57,25 @@ Get block object specified by the index. If there is no error, the response for 
 In this version, Index value is not restricted to number only.
 
 ```
-http://localhost:8000/api/block/[:index]
+http://localhost:8000/block/[:index]
 ```
 
 ##### Example
 
 - On browser
 ```
-http://localhost:8000/api/block/0
+http://localhost:8000/block/0
 ```
 
 - CURL
 ```
-curl http://localhost:8000/api/block/0
+curl http://localhost:8000/block/0
 ```
 
 - Postman
 ```
 curl -X GET \
-  http://localhost:8000/api/block/0 \
+  http://localhost:8000/block/0 \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -H 'Postman-Token: [your-token]' \
   -H 'cache-control: no-cache'
@@ -92,10 +92,10 @@ curl -X GET \
 If you try the index out of blockchain, It returns error and shows message.
 
 ```
-~ curl localhost:8000/api/block/100
+~ curl localhost:8000/block/100
 > Error: NotFoundError: Key not found in database [100]
 
-~ curl localhost:8000/api/block/abc
+~ curl localhost:8000/block/abc
 > Error: NotFoundError: Key not found in database [abc]
 ```
 
@@ -114,13 +114,13 @@ http://localhost:8000/block
 
 - CURL
 ```
-curl -X POST http://localhost:8000/api/block -d body="[body-data]"
+curl -X "POST" "http://localhost:8000/block" -H "Content-Type: application/json" -d $"{\"body\": \"block body contents\"}"
 ```
 
 - POSTMAN
 
 curl -X POST \
-  http://localhost:8000/api/block \
+  http://localhost:8000/block \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -H 'Postman-Token: [your-token]' \
   -H 'cache-control: no-cache' \
@@ -144,7 +144,7 @@ curl -X POST \
 If you try posting without body, the endpoint responses error message.
 
 ```
-~ curl -X POST http://localhost:8000/api/block
+~ curl -X POST http://localhost:8000/block
 > Block Body shouldn't be empty.
 
 ```

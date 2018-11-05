@@ -13,8 +13,6 @@ class BlockController {
      */
     constructor(app) {
         this.app = app;
-        // this.blocks = []; // will be removed
-        // this.initializeMockData(); // will be removed
         this.blockchain = new Blockchain();
         this.getBlockByIndex();
         this.postNewBlock();
@@ -25,33 +23,50 @@ class BlockController {
      * Implement a GET Endpoint to retrieve a block by index, url: "/api/block/:index"
      */
     getBlockByIndex() {
-        this.app.get("/api/block/:index", (req, res) => {
+        this.app.get("/block/:index", (req, res) => {
             // Add your code here
             var index = req.params.index;
             this.blockchain.getBlock(index)
                 .then(block => res.send(block))
-                .catch((error) => res.send("Error: " + error))
+                .catch((error) => res.status(400).send(error.message))
         });
     }
+
 
     /**
      * Implement a POST Endpoint to add a new Block, url: "/api/block"
      */
     postNewBlock() {
-        this.app.post("/api/block", (req, res) => {
+        this.app.post("/block", async (req, res) => {
             // Add your code here            
-            var body = req.body.body;
+            let body = req.body.body;
             if (body == undefined || body == "") {
                 res.send("Block Body shouldn't be empty.");
             } else {
-                let block = new Block(body);
+                const block = new Block(body);
                 this.blockchain.addBlock(block).then(async () => {
                     let height = await this.blockchain.getBlockHeight();
-                    this.blockchain.getBlock(height).then(block => res.send(block)); // It works well
+                    this.blockchain.getBlock(height).then(block => res.send(block));
                 });
             }
         });
     }//postNewBlock
+
+/*
+    postNewBlock() {
+        this.app.post("/block", async (req, res) => {
+            // Add your code here            
+            let body = req.body.body;
+            if (body == undefined || body == "") {
+                res.send("Block Body shouldn't be empty.");
+            } else {
+                const block = new Block(body);
+                const newBlock = await this.blockchain.addBlock(block);
+                res.send(newBlock);
+            }
+        });
+    }//postNewBlock
+*/
 /*
      postNewBlock3() {
         this.app.post("/api/block", async (req, res) => {
@@ -95,7 +110,7 @@ class BlockController {
 
     // for check blockchain status. not mandatory
     getBlockLength() {
-        this.app.get("/api/getBlockLength/", (req, res) => {
+        this.app.get("/getBlockLength/", (req, res) => {
            this.blockchain.getBlockHeight().then((height) => {
                console.log("height: " + height);
                res.send("height: " + height);

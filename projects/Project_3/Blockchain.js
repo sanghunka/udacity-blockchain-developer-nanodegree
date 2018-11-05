@@ -38,14 +38,15 @@ class Blockchain{
     // Block hash with SHA256 using newBlock and converting to a string
     newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
     // Adding block object to chain
-    this.addLevelDBData(newBlock.height, JSON.stringify(newBlock));
+    await this.addLevelDBData(newBlock.height, JSON.stringify(newBlock));
+    return newBlock;
     // console.log("addBlockHeight: "+newBlock.height ); //would be removed
   }
 
   // Get block height
   getBlockHeight(){
-    let i =-1; 
     return new Promise((resolve, reject) => {
+      let i =-1;
       db.createReadStream()
           .on('data', function(data) {
             i++;
@@ -91,8 +92,6 @@ class Blockchain{
   async validateChain(){
     let errorLog = [];
     const chainLength = await this.getBlockHeight()+1;
-  
-
     if (chainLength == 1){
       if (!this.validateBlock(i))errorLog.push(i);      
     } else{
@@ -117,24 +116,35 @@ class Blockchain{
     } else {
       console.log('No errors detected');
     }
-
   }
 
   //sanghun kang
   // Add data to levelDB with key/value pair
-  addLevelDBData(key,value){
-    db.put(key, value, function(err) {
-      if (err) return console.log('Block ' + key + ' submission failed', err);
+  async addLevelDBData(key,value){
+    return new Promise((resolve, reject) => {
+      db.put(key, value, function(error) {
+        if (error) {
+          reject('Block ' + key + ' submission failed', error);
+        } else {
+          resolve('Block ' + key + ' submission succeeded');
+        }
+      })
     })
   }
 
   // Get data from levelDB with key
-  getLevelDBData(key){
-    db.get(key, function(err, value) {
-      if (err) return console.log('Not found!', err);
-      console.log('Value = ' + value);
+  async getLevelDBData(key){
+    return new Promise((resolve, reject) => {
+      db.get(key, function(error, value) {
+        if (error) {
+          reject('Not found!', error);
+        } else {
+          resolve('Value = ' + value);
+        }
+      })
     })
   }
+
 
 
 }//class Blockchain
