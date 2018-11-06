@@ -9,7 +9,7 @@ First, I specify the following information.
 - **Node.js framework**: Express.js
 - **API Service Port Configuration**: 8000
 
-In this project, I created a RESTful web API for my private blockchain. I implimented two endpoints based on project 2:
+In this project, I created a RESTful web API for my private blockchain. I implemented two endpoints based on project 2:
 
 1. GET block
 2. POST block
