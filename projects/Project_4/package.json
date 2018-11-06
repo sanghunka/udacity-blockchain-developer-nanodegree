@@ -1,9 +1,10 @@
 {
-  "name": "project_3",
+  "name": "project_4",
   "version": "1.0.0",
   "description": "Blockchain has the potential to change the way that the world approaches data. Develop Blockchain skills by understanding the data model behind Blockchain by developing your own simplified private blockchain.",
   "main": "levelSandbox.js",
   "dependencies": {
+    "bitcoinjs-message": "^2.0.0",
     "crypto-js": "^3.1.9-1",
     "express": "^4.16.4",
     "level": "^4.0.0"
