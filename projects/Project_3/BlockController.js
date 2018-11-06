@@ -52,62 +52,6 @@ class BlockController {
         });
     }//postNewBlock
 
-/*
-    postNewBlock() {
-        this.app.post("/block", async (req, res) => {
-            // Add your code here            
-            let body = req.body.body;
-            if (body == undefined || body == "") {
-                res.send("Block Body shouldn't be empty.");
-            } else {
-                const block = new Block(body);
-                const newBlock = await this.blockchain.addBlock(block);
-                res.send(newBlock);
-            }
-        });
-    }//postNewBlock
-*/
-/*
-     postNewBlock3() {
-        this.app.post("/api/block", async (req, res) => {
-            // Add your code here            
-            var body = req.body.body;
-            let block = new Block(body);
-            this.blockchain.addBlock(block); // add new block!
-            let height = await this.blockchain.getBlockHeight();
-            this.blockchain.getBlock(height).then(block => console.log(block)); // It shows height-1 block. even after adding new block.
-        });
-    }//postNewBlock3
-*/
-
-/*
-    async postNewBlock2() {
-        this.app.post("/api/block", (req, res) => {
-            // Add your code here            
-            var body = req.body.body;
-            let block = new Block(body);
-            this.blockchain.addBlock(block); // add new block!
-            let height = await this.blockchain.getBlockHeight();// I don't know why it doesn't work even using async&await. 
-                                                                // When i use `async (req, res)` rather than `async postNewBlock2`, it works well but not wanted result.
-                                                                // I don't understand the effect between `async (req, res)` and `async postNewBlock2`
-            this.blockchain.getBlockHeight().then((height) => { })
-        });
-    }//postNewBlock2
-/*
-    postNewBlock1() {
-        this.app.post("/api/block", (req, res) => {
-            // Add your code here            
-            var body = req.body.body;
-            let block = new Block(body);
-            this.blockchain.addBlock(block); // add new block!
-            this.blockchain.getBlockHeight().then((height) => { 
-                this.blockchain.getBlock(height).then( (block) => {
-                    res.send(block)}); // It sends 'height -1' block. why????
-            })
-        });
-    }//postNewBlock1
-*/    
-
     // for check blockchain status. not mandatory
     getBlockLength() {
         this.app.get("/getBlockLength/", (req, res) => {

@@ -144,41 +144,6 @@ class Blockchain{
       })
     })
   }
-
-
-
 }//class Blockchain
 
 module.exports = Blockchain;
-
-//test code
-// let bc = new Blockchain();
-
-// (function theLoop (i) {
-//   setTimeout(function () {
-//       console.log(i);
-//       let blockTest = new Block("Test Block - " + (i+1));
-//       bc.addBlock(blockTest).then(() => {
-//           bc.getBlock(i).then(block => console.log(block))
-//           i++;
-//           if (i < 10) theLoop(i);
-//       });
-//   }, 10);
-// })(0);
-
-
-
-// let bc = new Blockchain();
-// console.log(bc.getLevelDBData(0));
-
-// bc.getBlock(0);
-// bc.getBlock(0).then(block => console.log(block));
-
-// bc.addBlock(new Block("1st"));
-//console.log(bc.getLevelDBData(1));
-// bc.getBlock(1).then(block => console.log(block));
-
-// bc.getBlockHeight().then(count => console.log("height:" + count));
-
-
-// bc.validateBlock(0).then(result => console.log(result));
