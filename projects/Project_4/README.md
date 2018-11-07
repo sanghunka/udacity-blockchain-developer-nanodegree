@@ -269,6 +269,7 @@ curl -X POST \
             "dec": "-26° 29' 24.9",
             "ra": "16h 29m 1.0s",
             "story": "33"
+            "decodedStory": "2"
         }
     },
     "time": "1541516236",
