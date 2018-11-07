@@ -22,6 +22,19 @@ class ValidatedAddress{
     })    
     }
 
+  removeValidatedAddress(address) {
+    return new Promise((resolve, reject) => {
+        db.del(address, function(err) {
+          if (err) {
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+      });
+    });
+  }
+
+
   // Add data to levelDB with key/value pair
   async addLevelDBData(key,value){
     return new Promise((resolve, reject) => {

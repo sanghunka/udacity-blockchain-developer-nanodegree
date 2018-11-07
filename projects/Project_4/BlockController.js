@@ -26,6 +26,7 @@ class BlockController {
         this.requestValidation();
         this.messageSignatureValidation();
         this.getTx();
+        this.decodeStory();
     }
     
     /**
@@ -33,14 +34,39 @@ class BlockController {
      */
     // Step 3 Requirement 3: Search by Star Block Height
     getBlockByIndex() {
-        this.app.get("/block/:HEIGHT", (req, res) => {
+        this.app.get("/block/:HEIGHT", async (req, res) => {
             // Add your code here
             var height = req.params.HEIGHT;
-            this.blockchain.getBlock(height)
-                .then(block => res.send(block))
-                .catch((error) => res.status(400).send(error.message))
-        });
+            try {
+                let block = await this.blockchain.getBlock(height);
+                // at height = 0, genesis block doesn't have story.
+                if (height != 0) {
+                    // block.body.star.storyDecoded = Buffer.from(block.body.star.story, 'hex').toString('ascii');                
+                    block = this.decodeStory(block);
+                }
+                res.send(block)
+            } catch (error) {
+                res.status(400).send(error.message);
+            }
+
+            return 1;
+        })
     }
+
+    
+    decodeStory(_block) {
+        let block = _block;
+
+        if (block === undefined) {
+        } else if(block.body === undefined) {
+        } else if (block.body.star === undefined) {
+        } else {
+            block.body.star.storyDecoded = Buffer.from(block.body.star.story, 'hex').toString('ascii');
+            console.log(block.body.star.storyDecoded);
+        }
+
+        return block;        
+    }    
 
     // Step 2 Requirement 1
     /**
@@ -59,12 +85,22 @@ class BlockController {
                 res.send("not verified address.");
             } else if (body.star == undefined || body.star == "" ) {
                 res.send("star object shouldn't be empty.");
+            } else if (body.star.dec == undefined || body.star.dec == "") {
+                res.send("star object must contain dec");
+            } else if (body.star.ra == undefined || body.star.ra == "") {
+                res.send("star object must contain ra");
+            } else if (body.star.story == undefined || body.star.story == "") {
+                res.send("star object must contain story");
             } else if (Buffer.byteLength(body.star.story, 'utf8') > 500) {
                 res.send("star story shouldn't be over than 500 bytes.");
             } else {    
                 body.star.story = Buffer.from(body.star.story, 'ascii').toString('hex');
                 const block = new Block(body);
                 const newBlock = await this.blockchain.addBlock(block);
+
+                // remove validatedAddress
+                await this.validatedAddress.removeValidatedAddress(body.address);
+
                 res.send(newBlock);
             }
         });
@@ -196,6 +232,7 @@ class BlockController {
             for (let i = 0; i <= height; i++) {
                 let block = await this.blockchain.getBlock(i);
                 if (block.body.address == _address) {
+                    block = this.decodeStory(block);
                     blockArray.push(block);
                 }
             }
@@ -213,6 +250,7 @@ class BlockController {
             for (let i = 0; i <= height; i++) {
                 let block = await this.blockchain.getBlock(i);
                 if (block.hash == _hash) {
+                    block = this.decodeStory(block);
                     blockArray.push(block);
                 }
             }
