@@ -1,0 +1,22 @@
+
+// assert.equal(??, ??); 
+민트 뭘로 해야 하냐
+
+99-105
+
+
+    // // SetApprovalForAll() isApprovedForAll()
+    describe('SetApprovalForAll() isApprovedForAll()', () => { 
+        it('Sets the approval of a given operator\n\
+            & Tells whether an operator is approved by a given owner', async function() { 
+            await this.contract.createStar(name, story, dec, mag, cent, {from: defaultAccount});            
+            await this.contract.setApprovalForAll(user2, true);
+            assert.equal(await this.contract.isApprovedForAll(defaultAccount, user2), true);
+        })
+
+        it('Unsets the approval of a given operator\n\
+        & Tells whether an operator is approved by a given owner', async function() { 
+            await this.contract.createStar(name, story, dec, mag, cent, {from: defaultAccount});            
+            await this.contract.setApprovalForAll(user2, false);
+            assert.notEqual(await this.contract.isApprovedForAll(defaultAccount, user2), true);
+        })
