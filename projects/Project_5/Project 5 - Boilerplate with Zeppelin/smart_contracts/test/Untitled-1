@@ -20,3 +20,7 @@
             await this.contract.setApprovalForAll(user2, false);
             assert.notEqual(await this.contract.isApprovedForAll(defaultAccount, user2), true);
         })
+
+https://github.com/stakah/Project_5/blob/master/smart_contracts/contracts/StarNotary.sol
+https://github.com/vdagar/blockchain/blob/master/Project_5/smart_contracts/contracts/StarNotary.sol
+https://github.com/ibrunotome/udacity-blockchain-developer-nanodegree/blob/master/project5/smart_contracts/contracts/StarNotary.sol
