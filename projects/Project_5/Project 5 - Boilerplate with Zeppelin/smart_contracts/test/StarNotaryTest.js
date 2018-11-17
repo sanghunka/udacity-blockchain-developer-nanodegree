@@ -25,6 +25,18 @@ contract('StarNotary', accounts => {
         })
     })
 
+    // checkIfStarExist()
+    describe('checkIfStarExist()', () => { 
+        it('shows false when trying to create the stars with the unduplicate coordinated', async function () {
+            assert.equal(await this.contract.checkIfStarExist(dec, mag, cent), false)
+        })
+
+        it('shows true when trying to create the stars with the duplicate coordinated', async function () {
+            await this.contract.createStar(name, story, dec, mag, cent, {from: defaultAccount})
+            assert.equal(await this.contract.checkIfStarExist(dec, mag, cent), true)
+        })
+    })
+
     // tokenIdToStarInfo()
     describe('tokenIdToStarInfo()', () => {
         it('Gets StarInfo by tokenId', async function () {       
@@ -78,10 +90,17 @@ contract('StarNotary', accounts => {
     // mint()
     describe('mint()', () => { 
         it('Mint a new token', async function() { 
-            let result = await this.contract.mint(tokenId, {from:defaultAccount});
-            const toAddress =result.logs[0].args.to;
-            assert.equal(defaultAccount, toAddress);
+            await this.contract.mint(tokenId, {from:defaultAccount});
+            assert.equal(await this.contract.ownerOf(tokenId), defaultAccount)
         })
+
+        // same like upper test
+        // it('Mint a new token', async function() { 
+        //     let result = await this.contract.mint(tokenId, {from:defaultAccount});
+        //     const toAddress =result.logs[0].args.to;
+        //     assert.equal(defaultAccount, toAddress);
+        // })
+
     })
 
     // approve() getApproved()

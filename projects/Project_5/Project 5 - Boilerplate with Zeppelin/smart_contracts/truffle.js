@@ -12,7 +12,26 @@
  *   },
  */
 
+var HDWalletProvider = require('truffle-hdwallet-provider');
+
+const mnemonic = 'pumpkin soup clay wet toss approve cloth exhaust rent detect impulse include';
+const infura = 'https://rinkeby.infura.io/v3/fc68dcbabfb7455b8306a736124bb675'
+
+
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
+  networks: { 
+    development: {
+      host: '127.0.0.1',
+      port: 8545,
+      network_id: "*"
+    }, 
+    rinkeby: {
+      provider: () => new HDWalletProvider(mnemonic, infura),
+      network_id: 4,
+      gas : 4500000,
+      gasPrice : 10000000000
+    },
+  }
 };
