@@ -15,7 +15,7 @@
 var HDWalletProvider = require('truffle-hdwallet-provider');
 
 const mnemonic = 'pumpkin soup clay wet toss approve cloth exhaust rent detect impulse include';
-const infura = 'https://rinkeby.infura.io/v3/fc68dcbabfb7455b8306a736124bb675'
+const infura = 'https://rinkeby.infura.io/v3/e7e08ac3ccd24a8a8808509759ab1a72'
 
 
 module.exports = {

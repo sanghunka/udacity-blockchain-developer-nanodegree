@@ -12,7 +12,7 @@ contract('StarNotary', accounts => {
     let user1 = accounts[1]
     let user2 = accounts[2]
     // let randomMaliciousUser = accounts[3]
-    let starPrice = web3.toWei(.01, "ether")
+    let starPrice = web3.toWei(.000001, "ether")
     
     beforeEach(async function() { 
         this.contract = await StarNotary.new({from: defaultAccount})
@@ -58,9 +58,17 @@ contract('StarNotary', accounts => {
     describe('putStarUpForSale() starsForSale()', () => {
         it('Maps tokenId and starPrice into starsForSale\n\
         & Get that info', async function () {
-            await this.contract.createStar(name, story, dec, mag, cent, {from: defaultAccount});
-            await this.contract.putStarUpForSale(tokenId, starPrice, {from: defaultAccount});
-            assert.equal(await this.contract.starsForSale(tokenId), starPrice);
+            await this.contract.createStar(name, story, "dec1", "mag1", "cent1", {from: defaultAccount});
+            await this.contract.putStarUpForSale(1, starPrice, {from: defaultAccount});
+                        
+            let StarsIndicesForSale = await this.contract.getStarsForSale();
+            assert.equal(await StarsIndicesForSale.length, 1);
+
+            await this.contract.createStar(name, story, "dec2", "mag2", "cent2", {from: defaultAccount});
+            await this.contract.putStarUpForSale(2, starPrice, {from: defaultAccount});
+
+            StarsIndicesForSale = await this.contract.getStarsForSale();
+            assert.equal(await StarsIndicesForSale.length, 2);
         })
     })    
    

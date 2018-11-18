@@ -16,32 +16,28 @@ contract StarNotary is ERC721 {
         string story;
         //Star coordinates
         Coordinates coordinates;
-        
     }
 
     uint256 tokenCount = 0;
-
     mapping(uint256 => Star) public tokenIdToStarInfo; 
     mapping(uint256 => uint256) public starsForSale;
-
-    Star[] internal stars;
+    mapping(bytes32 => bool) public starHashMap;
     uint256[] public StarsIndicesForSale;
 
     // createStar()
     function createStar(string _name, string story, string dec, string mag, string cent) public { 
         //check all required input
         bytes32 keccak256ResultOfEmpty = keccak256("");
-
         require(keccak256(abi.encodePacked(dec)) != keccak256ResultOfEmpty, "dec can't be empty value");
         require(keccak256(abi.encodePacked(mag)) != keccak256ResultOfEmpty, "mag can't be empty value");
         require(keccak256(abi.encodePacked(cent)) != keccak256ResultOfEmpty, "cent can't be empty value");
-
         //Smart contract prevents stars with the same coordinates from being added
         require(!checkIfStarExist(dec, mag, cent), "The star exists at given coordinates");
 
         Coordinates memory coordinates = Coordinates(dec, mag, cent);
         Star memory newStar = Star(_name, story, coordinates);
-        stars.push(newStar);
+        bytes32 hash = generateStarHash(dec, mag, cent);
+        starHashMap[hash] = true;
 
         tokenCount++;
         uint256 _tokenId = tokenCount;
@@ -53,16 +49,13 @@ contract StarNotary is ERC721 {
     // putStarUpForSale()
     function putStarUpForSale(uint256 _tokenId, uint256 _price) public { 
         require(this.ownerOf(_tokenId) == msg.sender);
-
         starsForSale[_tokenId] = _price;
-
         StarsIndicesForSale.push(_tokenId);
     }
 
     // buyStar()
     function buyStar(uint256 _tokenId) public payable { 
         require(starsForSale[_tokenId] > 0);
-        
         uint256 starCost = starsForSale[_tokenId];
         address starOwner = this.ownerOf(_tokenId);
         require(msg.value >= starCost);
@@ -75,24 +68,12 @@ contract StarNotary is ERC721 {
         if(msg.value > starCost) { 
             msg.sender.transfer(msg.value - starCost);
         }
-
         //remove star from starsForSale & StarsIndicesForSale ????
     }
 
     // checkIfStarExist()
     function checkIfStarExist(string _dec, string _mag, string _cent) public view returns (bool){
-        for (uint i = 0; i < stars.length; i++) {
-            Star memory eachStar = stars[i];
-            
-            string memory eachDec = eachStar.coordinates.dec;
-            string memory eachMag = eachStar.coordinates.mag;
-            string memory eachCent = eachStar.coordinates.cent;
-
-            if (keccak256(abi.encodePacked(eachDec, eachMag, eachCent)) == keccak256(abi.encodePacked(_dec, _mag, _cent))) {
-                return true;
-            }
-        }
-        return false;
+        return starHashMap[generateStarHash(_dec, _mag, _cent)];
     }
 
     // mint()
@@ -100,8 +81,8 @@ contract StarNotary is ERC721 {
         super._mint(msg.sender, tokenId); //Implemented in Openzeppelin ERC721.sol
     }
 
-    // starsForSale()
-    function starsForSale() public view returns(uint256[]) {
+    // getStarsForSale()
+    function getStarsForSale() public view returns(uint256[]) {
         return StarsIndicesForSale;
     }
 
@@ -115,6 +96,11 @@ contract StarNotary is ERC721 {
             tokenIdToStarInfo[tokenId].coordinates.cent
         );
     }
+
+    function generateStarHash(string dec, string mag, string cent) private pure returns(bytes32) {
+        return keccak256(abi.encodePacked(dec, mag, cent));
+    }
+
     // approve()
     //Implemented in Openzeppelin ERC721.sol
     // safeTransferFrom()
